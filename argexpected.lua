@@ -21,8 +21,47 @@
 --
 --- assign to local
 local type = type
+local getinfo = debug.getinfo
+local open = io.open
+local match = string.match
+local sub = string.sub
 local format = require('string.format')
-local getname = require('argexpected.getname')
+
+--- readline reads a line from file.
+--- @param lineno integer line number
+--- @param filename string file name
+--- @return string? line
+local function readline(lineno, filename)
+    local f = open(filename, 'r')
+    if f then
+        local line = f:read('*l')
+        while line and lineno > 1 do
+            -- discard lines until lineno
+            lineno = lineno - 1
+            line = f:read('*l')
+        end
+        f:close()
+        return line
+    end
+end
+
+--- getfname returns function name.
+--- @return string fname
+local function getfname()
+    local lv = 3
+    local info = getinfo(lv, 'nS')
+    if info.name then
+        -- return function name
+        return info.name
+    end
+
+    -- linedefined is <1 if the function is a C function or called by tail call
+    -- read line of function definition from source file
+    local line = info.linedefined > 0 and
+                     readline(info.linedefined, sub(info.source, 2))
+    -- return extracted function name or '?' (unnamed function)
+    return line and match(line, 'function%s*([^(]+)') or '?'
+end
 
 --- argexpected that throws an error if the condition is false.
 --- @param cond boolean condition to check argument validity
@@ -39,12 +78,12 @@ local function argexpected(cond, idx, extramsg, ...)
     end
 
     if cond ~= true then
-        local fname = getname(2)
+        local fname = getfname()
         local msg = format("bad argument #%d to '%s'", idx, fname)
         if extramsg then
             msg = msg .. ' (' .. format(extramsg, ...) .. ')'
         end
-        error(msg, 2)
+        error(msg, 3)
     end
 end
 

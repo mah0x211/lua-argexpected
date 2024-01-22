@@ -57,25 +57,18 @@ jobs:
     -
       name: Install Tools
       run: |
-        sudo apt install lcov -y
         luarocks install assert
         luarocks install luacov
-        luarocks install string-format
     -
       name: Install
       run: |
-        luarocks make ARGEXPECTED_COVERAGE=1
+        luarocks make
     -
       name: Run Test
       run: |
         lua ./test/argexpected_test.lua
     -
-      name: Generate coverage reports
-      run: |
-        sh ./covgen.sh
-    -
       name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: ./coverage/lcov.info
         flags: unittests

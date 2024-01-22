@@ -29,7 +29,16 @@ function testcase.throw_error()
         end
         foo('hello', 'world')
     end)
-    assert.match(err, 'argexpected_test.lua:28: bad argument #2 to \'foo\'')
+    assert.match(err, 'argexpected_test.lua:30: bad argument #2 to \'foo\'')
+
+    err = assert.throws(function()
+        (function(a, b)
+            argexpected(type(a) == 'string', 1)
+            argexpected(type(b) == 'number', 2)
+        end)('hello', 'world')
+    end)
+    -- NOTE: lua throws error at line 35, but luajit throws error at line 38.
+    assert.match(err, 'argexpected_test.lua:3[58]: bad argument #2 to \'?\'', false)
 end
 
 function testcase.throw_error_with_extramsg()
@@ -44,7 +53,7 @@ function testcase.throw_error_with_extramsg()
         foo('hello', 'world')
     end)
     assert.match(err,
-                 'argexpected_test.lua:41: bad argument #2 to \'foo\' (number expected, got string)')
+                 'argexpected_test.lua:53: bad argument #2 to \'foo\' (number expected, got string)')
 end
 
 function testcase.fails_with_invalid_arguments()
