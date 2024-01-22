@@ -83,7 +83,7 @@ local function argexpected(cond, idx, extramsg, ...)
         if extramsg then
             msg = msg .. ' (' .. format(extramsg, ...) .. ')'
         end
-        error(msg, 2)
+        error(msg, 3)
     end
 end
 
