@@ -3,7 +3,7 @@
 [![test](https://github.com/mah0x211/lua-argexpected/actions/workflows/test.yml/badge.svg)](https://github.com/mah0x211/lua-argexpected/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/mah0x211/lua-argexpected/branch/master/graph/badge.svg)](https://codecov.io/gh/mah0x211/lua-argexpected)
 
-Helper module to check arguments.
+Helper module to check the function arguments.
 
 
 ## Installation
@@ -42,7 +42,7 @@ bad argument #<idx> to 'funcname' (<extramsg>)
 - `cond:boolean`: if `true`, does nothing, otherwise raises an error with the message described above.
 - `idx:number`: index of the argument.
 - `extramsg:string`: extra message to be shown in the error message.
-- `...`: arguments to be passed to `string.format` to format `extramsg`.
+- `...`: arguments to be passed to https://github.com/mah0x211/lua-string-format to format `extramsg`.
 
 
 ## License
